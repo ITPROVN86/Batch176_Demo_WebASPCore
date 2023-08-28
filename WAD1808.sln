@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleWAD1", "ExampleWAD1\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCodeFirstApproach", "MyCodeFirstApproach\MyCodeFirstApproach.csproj", "{4A9515FD-17CB-438A-9952-A7E0F4FD7F8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPA_Core_Angular", "SPA_Core_Angular\SPA_Core_Angular.csproj", "{2A98FE78-3D79-4AA3-B5D2-213FD6C49583}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPA_Core_Angular", "SPA_Core_Angular\SPA_Core_Angular.csproj", "{2A98FE78-3D79-4AA3-B5D2-213FD6C49583}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular_Core", "Angular_Core\Angular_Core.csproj", "{67FC8F97-6E94-4821-A021-E81D8D87E76F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Angular_Core", "Angular_Core\Angular_Core.csproj", "{67FC8F97-6E94-4821-A021-E81D8D87E76F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoNet7", "DemoNet7\DemoNet7.csproj", "{EC0002F7-8B31-4A44-828D-38D66525F9C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{67FC8F97-6E94-4821-A021-E81D8D87E76F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67FC8F97-6E94-4821-A021-E81D8D87E76F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67FC8F97-6E94-4821-A021-E81D8D87E76F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

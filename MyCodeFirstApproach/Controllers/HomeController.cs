@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MyCodeFirstApproach.Controllers
@@ -23,6 +24,9 @@ namespace MyCodeFirstApproach.Controllers
         [Authorize(Roles = "Admin,User")]
         public IActionResult Index()
         {
+            var user = User as ClaimsPrincipal;
+            var userName = user?.FindFirstValue(ClaimTypes.Name);
+            ViewData["MessageInfo"] = userName;
             return View();
         }
 

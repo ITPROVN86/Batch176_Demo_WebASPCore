@@ -14,13 +14,17 @@ namespace MyCodeFirstApproach.Controllers
     {
         public IActionResult Login(string ReturnUrl = "")
         {
-            LoginModel objLoginModel = new LoginModel();
-            objLoginModel.ReturnUrl = ReturnUrl;
-            return View(objLoginModel);
+            ViewData["Title"] = "Đăng nhập";
+            LoginModel model = new LoginModel();
+            model.UserName = "admin";
+            model.Password = "admin";
+            model.ReturnUrl = ReturnUrl;
+            return View(model);
         }
 
         public IActionResult Index()
         {
+            ViewData["Title"] = "Đăng nhập";
             return View("Login");
         }
 

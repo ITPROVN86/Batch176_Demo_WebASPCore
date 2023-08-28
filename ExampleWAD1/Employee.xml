@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Employees>
+	<Employee>
+		<EmpCode>Emp001</EmpCode>
+		<EmpName>Rose</EmpName>
+		<EmpLocation>Đà Nẵng</EmpLocation>
+	</Employee>
+	<Employee>
+		<EmpCode>Emp002</EmpCode>
+		<EmpName>Rosie</EmpName>
+		<EmpLocation>Quảng Nam</EmpLocation>
+	</Employee>
+	<Employee>
+		<EmpCode>Emp003</EmpCode>
+		<EmpName>Vu Chau</EmpName>
+		<EmpLocation>Quảng Nam</EmpLocation>
+	</Employee>
+	<Employee>
+		<EmpCode>Emp004</EmpCode>
+		<EmpName>An</EmpName>
+		<EmpLocation>Đà Nẵng</EmpLocation>
+	</Employee>
+</Employees>

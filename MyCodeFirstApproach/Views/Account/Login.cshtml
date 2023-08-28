@@ -4,6 +4,7 @@
         <div class="col-md-3">
             <h3>Login</h3>
             <form asp-action="Login" method="post">
+                @TempData["Error"]
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">

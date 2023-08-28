@@ -59,6 +59,7 @@ namespace MyCodeFirstApproach.Controllers
                 }
                 if (!(username.Contains("admin") && password.Contains("admin")))
                 {
+                    //TempData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
                     ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng.");
                     return View(model);
                 }

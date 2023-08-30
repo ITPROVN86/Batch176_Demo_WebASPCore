@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyCodeFirstApproach.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace MyCodeFirstApproach
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,7 +32,18 @@ namespace MyCodeFirstApproach
               {
                   options.MinimumSameSitePolicy = SameSiteMode.None;
               });*/
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Admin/Account/Login"; // Đường dẫn đến trang đăng nhập
+                /*options.LogoutPath = "/Account/Logout"; // Đường dẫn đến trang đăng xuất
+                options.AccessDeniedPath = "/Account/AccessDenied"; // Đường dẫn đến trang truy cập bị từ chối
+                */
+                // Đường dẫn mặc định sau khi xác thực thành công
+                options.ReturnUrlParameter = "returnUrl";
+            }).AddCookie("Admin",options =>
+            {
+                options.LoginPath = new PathString("/Admin/Account/Login");
+            });
 
             services.AddControllersWithViews();
         }
@@ -52,9 +65,17 @@ namespace MyCodeFirstApproach
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            //app.UseMiddleware<ReturnUrlMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area=Admin}/{controller=Account}/{action=Index}/{id?}/{*ReturnUrl}"
+                );
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -67,13 +88,7 @@ namespace MyCodeFirstApproach
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area=Admin}/{controller=Account}/{action=Index}/{id?}"
-                );
-            });
+           
         }
     }
 }

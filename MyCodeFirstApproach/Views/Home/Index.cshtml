@@ -12,7 +12,22 @@
         }
     }
     <h1 class="display-4">Welcome @ViewData["MessageInfo"]</h1>
-
+    @{
+        try
+        {
+            int a = 0;
+            int result = 10 / a;
+            <p>Result: @result</p>
+        }
+        catch (DivideByZeroException ex)
+        {
+            <p>Error: @ex.Message</p>
+        }
+        finally
+        {
+            <p>This execute is compiler</p>
+        }
+    }
 
 </div>
 

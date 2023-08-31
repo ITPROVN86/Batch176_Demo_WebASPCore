@@ -15,18 +15,17 @@ namespace MyCodeFirstApproach.Areas.Admin.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        public IActionResult Index()
+
+        public IActionResult Login()
         {
             ViewData["Title"] = "Đăng nhập";
-            return View("Index");
+            return View();
         }
-
-        public IActionResult Login(string ReturnUrl = null)
+        /*public IActionResult Login(string ReturnUrl = null)
         {
             ViewData["Title"] = "Đăng nhập";
-            return View("Index");
-        }
-
+            return View();
+        }*/
 
         [HttpPost]
         [AllowAnonymous]
@@ -69,7 +68,7 @@ namespace MyCodeFirstApproach.Areas.Admin.Controllers
                     {"claimType","AdminClaim" },
                     {"claimValue","true" }
                 };
-                return RedirectToAction("Index","Home", routeValues);// RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", routeValues);// RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng.");
             return View(model);
@@ -79,10 +78,10 @@ namespace MyCodeFirstApproach.Areas.Admin.Controllers
         {
 
             // Đăng xuất người dùng
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync("Admin");
 
             // Chuyển hướng đến trang đăng nhập hoặc trang chính
-            return RedirectToAction("Index", "Account", new { Area="Admin" }); // Thay thế bằng tên trang đăng nhập hoặc trang chính của bạn
+            return RedirectToAction("Login", "Account", new { area="Admin" }); // Thay thế bằng tên trang đăng nhập hoặc trang chính của bạn
         }
     }
 }

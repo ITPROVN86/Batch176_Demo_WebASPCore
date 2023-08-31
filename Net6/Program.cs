@@ -1,11 +1,6 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using System.ComponentModel.DataAnnotations;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

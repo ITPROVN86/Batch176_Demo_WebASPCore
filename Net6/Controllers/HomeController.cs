@@ -1,17 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MyCodeFirstApproach.Models;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Net6.Models;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace MyCodeFirstApproach.Controllers
+namespace Net6.Controllers
 {
-
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,12 +13,8 @@ namespace MyCodeFirstApproach.Controllers
             _logger = logger;
         }
 
-        /*[Authorize(Roles = "Admin,User")]*/
         public IActionResult Index()
         {
-            var user = User as ClaimsPrincipal;
-            var userName = user?.FindFirstValue(ClaimTypes.Name);
-            ViewData["MessageInfo"] = userName;
             return View();
         }
 

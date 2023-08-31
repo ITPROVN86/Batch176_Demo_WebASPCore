@@ -622,6 +622,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Common\" />
     <Folder Include="Data\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />

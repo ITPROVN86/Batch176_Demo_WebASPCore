@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Angular_Core", "Angular_Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoNet7", "DemoNet7\DemoNet7.csproj", "{EC0002F7-8B31-4A44-828D-38D66525F9C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net6", "Net6\Net6.csproj", "{4CF297FF-C25C-4168-84A7-3339A2CD8953}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC0002F7-8B31-4A44-828D-38D66525F9C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CF297FF-C25C-4168-84A7-3339A2CD8953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CF297FF-C25C-4168-84A7-3339A2CD8953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CF297FF-C25C-4168-84A7-3339A2CD8953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CF297FF-C25C-4168-84A7-3339A2CD8953}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

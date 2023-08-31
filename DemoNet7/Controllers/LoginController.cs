@@ -1,5 +1,4 @@
-﻿
-using DemoNet7.Models;
+﻿using DemoNet7.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

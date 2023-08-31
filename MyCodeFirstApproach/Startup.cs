@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyCodeFirstApproach.Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +28,6 @@ namespace MyCodeFirstApproach
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*  services.Configure<CookiePolicyOptions>(options =>
-              {
-                  options.MinimumSameSitePolicy = SameSiteMode.None;
-              });*/
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.LoginPath = "/Admin/Account/Login"; // Đường dẫn đến trang đăng nhập
@@ -40,7 +36,7 @@ namespace MyCodeFirstApproach
                 */
                 // Đường dẫn mặc định sau khi xác thực thành công
                 options.ReturnUrlParameter = "returnUrl";
-            }).AddCookie("Admin",options =>
+            }).AddCookie("Admin", options =>
             {
                 options.LoginPath = new PathString("/Admin/Account/Login");
             });
@@ -73,22 +69,35 @@ namespace MyCodeFirstApproach
             {
                 endpoints.MapControllerRoute(
                   name: "areas",
-                  pattern: "{area=Admin}/{controller=Account}/{action=Index}/{id?}/{*ReturnUrl}"
+                  pattern: "{area=Admin}/{controller=Account}/{action=Login}/{id?}/{*ReturnUrl}"
                 );
             });
 
-            app.UseEndpoints(endpoints =>
+    /*        app.UseEndpoints(endpoints =>
             {
-                /*endpoints.MapAreaControllerRoute(
+                *//*endpoints.MapAreaControllerRoute(
                     name: "MyArea",
                     areaName: "Products",
-                    pattern: "Products/{controller=Home}/{action=Index}/{id?}");*/
+                    pattern: "Products/{controller=Home}/{action=Index}/{id?}");*//*
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });*/
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+             areaName: "Admin",
+                    pattern: "Admin/{controller=Account}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-           
+          
+
+
         }
     }
 }

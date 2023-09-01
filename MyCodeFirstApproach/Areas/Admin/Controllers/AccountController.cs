@@ -15,17 +15,11 @@ namespace MyCodeFirstApproach.Areas.Admin.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-
         public IActionResult Login()
         {
             ViewData["Title"] = "Đăng nhập";
             return View();
         }
-        /*public IActionResult Login(string ReturnUrl = null)
-        {
-            ViewData["Title"] = "Đăng nhập";
-            return View();
-        }*/
 
         [HttpPost]
         [AllowAnonymous]

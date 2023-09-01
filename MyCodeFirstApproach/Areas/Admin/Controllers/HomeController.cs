@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MyCodeFirstApproach.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin")]
     [Authorize(AuthenticationSchemes = "Admin")]
     public class HomeController : Controller
     {

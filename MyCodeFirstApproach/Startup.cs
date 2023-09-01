@@ -65,24 +65,14 @@ namespace MyCodeFirstApproach
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+       /*     app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                   name: "areas",
                   pattern: "{area=Admin}/{controller=Account}/{action=Login}/{id?}/{*ReturnUrl}"
                 );
             });
-
-    /*        app.UseEndpoints(endpoints =>
-            {
-                *//*endpoints.MapAreaControllerRoute(
-                    name: "MyArea",
-                    areaName: "Products",
-                    pattern: "Products/{controller=Home}/{action=Index}/{id?}");*//*
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });*/
+*/
 
             app.UseEndpoints(endpoints =>
             {

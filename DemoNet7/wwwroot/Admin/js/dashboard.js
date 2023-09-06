@@ -186,7 +186,7 @@
 
 
 
-        if (Morris.EventEmitter) {
+    /*    if (Morris.EventEmitter) {
             // Use Morris.Area instead of Morris.Line
             Morris.Area({
                 element: 'graph-area',
@@ -260,7 +260,7 @@
 
             });
 
-        }
+        }*/
 
 
         //Jquery vector map

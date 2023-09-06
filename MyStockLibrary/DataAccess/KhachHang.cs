@@ -16,6 +16,7 @@ namespace MyStockLibrary.DataAccess
         public string TenKhachHang { get; set; }
         [Display(Name ="Địa chỉ")]
         public string DiaChi { get; set; }
+        [Display(Name = "Điện thoại")]
         public string DienThoai { get; set; }
 
         public virtual ICollection<HoaDon> HoaDons { get; set; }

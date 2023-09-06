@@ -58,17 +58,24 @@ namespace MyStockLibrary.DataAccess
 
         public IEnumerable<KhachHang> GetKhachHangBySearchName(string name)
         {
-            var khachHangs = new List<KhachHang>();
+            var context = new MyStockContext();
+            /*var khachHangs = new List<KhachHang>();*/
+            IQueryable<KhachHang> model = context.KhachHangs;
             try
             {
-                using var context = new MyStockContext();
-                khachHangs = context.KhachHangs.Where(k => k.TenKhachHang.Contains(name)).ToList();
+                if (!String.IsNullOrEmpty(name)) { 
+                    model = model.Where(x => x.TenKhachHang.Contains(name));
+                }
+                else
+                {
+                    return model;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return khachHangs;
+            return model;
         }
 
         public void AddNew(KhachHang kh)

@@ -21,13 +21,10 @@ namespace DemoNet7.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Index(string searchString)
         {
-            if (!String.IsNullOrEmpty(searchString)) // kiểm tra chuỗi tìm kiếm có rỗng/null hay không
-            {
-                var khachHangList = khachHangRepository.GetKhachHangByName(searchString);
 
-                return View(khachHangList);
-            }
-            return View("Index");
+            var khachHangList = khachHangRepository.GetKhachHangByName(searchString);
+            return View(khachHangList);
+
         }
 
         // GET: CustomerController/Details/5
@@ -44,12 +41,13 @@ namespace DemoNet7.Areas.Admin.Controllers
 
         // POST: CustomerController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        /*        [ValidateAntiForgeryToken]*/
         public ActionResult Create(KhachHang kh)
         {
             try
             {
                 khachHangRepository.InsertKhachHang(kh);
+                TempData["Message"] = "Tạo mới thành công";
                 return RedirectToAction("Index");
             }
             catch
@@ -61,16 +59,19 @@ namespace DemoNet7.Areas.Admin.Controllers
         // GET: CustomerController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var kh = khachHangRepository.GetKhachHangByID(id);
+            return View(kh);
         }
 
         // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, KhachHang kh)
         {
             try
             {
+                khachHangRepository.UpdateKhachHang(kh);
+                TempData["Message"] = "Cập nhật thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -86,12 +87,14 @@ namespace DemoNet7.Areas.Admin.Controllers
         }
 
         // POST: CustomerController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirm(int id)
         {
             try
             {
+                khachHangRepository.DeleteKhachHang(id);
+                TempData["Message"] = "Xoá thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

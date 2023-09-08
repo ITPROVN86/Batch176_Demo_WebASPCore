@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyStockLibrary.DataAccess;
 using MyStockLibrary.Repository;
+using X.PagedList;
 
 namespace DemoNet7.Areas.Admin.Controllers
 {
@@ -18,11 +19,28 @@ namespace DemoNet7.Areas.Admin.Controllers
              return View(khachHangList);
          }*/
 
-        [HttpGet]
-        public ActionResult Index(string searchString)
-        {
+        /*   [HttpGet]
+           public ActionResult Index(string searchString)
+           {
+               if (!string.IsNullOrEmpty(searchString))
+               {
+                   searchString = searchString.ToLower();
+               }
+               var khachHangList = khachHangRepository.GetKhachHangByName(searchString);
+               return View(khachHangList);
 
-            var khachHangList = khachHangRepository.GetKhachHangByName(searchString);
+           }*/
+
+        [HttpGet]
+        public ActionResult Index(string searchString, int? page, string sortBy)
+        {
+            var khachHangList = khachHangRepository.GetKhachHangs(sortBy).ToPagedList(page ?? 1, 5);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                khachHangList = khachHangRepository.GetKhachHangByName(searchString, sortBy).ToPagedList(page ?? 1, 5);
+            }
+            //TempData["searchString"] = searchString;
             return View(khachHangList);
 
         }
@@ -101,6 +119,22 @@ namespace DemoNet7.Areas.Admin.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteMultiple(IEnumerable<int> SelectedCatDelete)
+        {
+            if (SelectedCatDelete.Count() == 0)
+            {
+                ViewBag.DelError = "Yes";
+                ViewBag.DelTitle = "Delete operation has not been completed";
+                ViewBag.DelMessage = "This record can not be deleted, beacuse one or more cost record use this customer.";
+                return View("Error");
+                //return RedirectToAction("ExceptionError", "Error", new { area = "" });
+            }
+            khachHangRepository.DeleteSelectedKhachHang(SelectedCatDelete);
+            TempData["Message"] = $"Xoá {SelectedCatDelete.Count()} hàng thành công";
+            return RedirectToAction("Index");
         }
     }
 }

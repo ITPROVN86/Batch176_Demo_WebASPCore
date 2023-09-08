@@ -9,11 +9,13 @@ namespace MyStockLibrary.Repository
 {
     public interface IKhachHangRepository
     {
-        IEnumerable<KhachHang> GetKhachHangs();
-        IEnumerable<KhachHang> GetKhachHangByName(string name);
+        IEnumerable<KhachHang> GetKhachHangs(string sortBy);
+        IEnumerable<KhachHang> GetKhachHangByName(string name,string sortBy);
+       /* IEnumerable<KhachHang> ListByKhachHangName(string stringQuery);*/
         KhachHang GetKhachHangByID(int id);
         void InsertKhachHang(KhachHang kh);
         void UpdateKhachHang(KhachHang kh);
         void DeleteKhachHang(int id);
+        IEnumerable<KhachHang> DeleteSelectedKhachHang(IEnumerable<int> DeleteList);
     }
 }

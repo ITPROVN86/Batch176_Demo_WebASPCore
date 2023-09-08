@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<MyStockLibrary.DataAccess.KhachHang>
-
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QL Khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +10,6 @@
     Quản lý Khách hàng
 </header>
 <div class="panel-body">
-
     <p>
         @Html.ActionLink("Tạo mới","Create","Customer", null, new {@class="btn btn-danger"})
     </p>
@@ -27,7 +27,7 @@
         @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
         {
                 <div class="row col-lg-6">
-                @Html.TextBox("SearchString",null,null,new {@class="form-control", @placeholder="Nhập từ khoá cần tìm kiếm"})
+                @Html.TextBox("SearchString", Context.Request.Query["SearchString"],null,new {@class="form-control", @placeholder="Nhập từ khoá cần tìm kiếm"})
             </div>
 
             <div class="col-lg-6">
@@ -36,26 +36,41 @@
             <div style="clear: both"></div>
         }
         </div>
-        
+         @using (Html.BeginForm("DeleteMultiple", "Customer", FormMethod.Post))
+        {
         <div class="form-group">
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>
+                             @{
+                                var sortBy = Context.Request.Query["sortby"] == "id" ? "iddesc" : "id";
+                            }
+                            <a href="@Url.Action("Index","Customer",new {sortBy=sortBy,SearchString=@Context.Request.Query["SearchString"]})">
                             @Html.DisplayNameFor(model => model.MaKhachHang)
+                            </a>
                         </th>
                         <th>
+                            @{
+                                sortBy = Context.Request.Query["sortby"] == "name" ? "namedesc" : "name";
+                            }
+                            <a href="@Url.Action("Index","Customer",new {sortBy=sortBy,SearchString=@Context.Request.Query["SearchString"]})">
                             @Html.DisplayNameFor(model => model.TenKhachHang)
+                            </a>
                         </th>
                         <th>
+                             @{
+                                sortBy = Context.Request.Query["sortby"] == "address" ? "addressdesc" : "address";
+                            }
+                             <a href="@Url.Action("Index","Customer",new {sortBy=sortBy,SearchString=@Context.Request.Query["SearchString"]})">
                             @Html.DisplayNameFor(model => model.DiaChi)
+                            </a>
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.DienThoai)
                         </th>
                         <th>
                             Chức năng
-
                         </th>
                     </tr>
                 </thead>
@@ -78,6 +93,7 @@
                                     @Html.DisplayFor(modelItem => item.DienThoai)
                                 </td>
                                 <td>
+                                    <input type="checkbox" name="SelectedCatDelete" value="@item.MaKhachHang">
                                     @Html.ActionLink("Sửa", "Edit", new {  id=item.MaKhachHang  },new {@class="text-danger"}) |
                                     @Html.ActionLink("Chi tiết", "Details", new { /* id=item.PrimaryKey */ }) |
                                     @Html.ActionLink("Xoá", "Delete", new {id=item.MaKhachHang },new {@class="text-danger"})
@@ -88,5 +104,17 @@
                 </tbody>
             </table>
         </div>
+           <div class="form-group">
+<button type="submit" class="btn btn-danger">Delete Selected Rows</button>
+          </div>
+          }
+                  <div class="form-group">
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,
+SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.Query["sortby"]}),
+new X.PagedList.Web.Common.PagedListRenderOptions {
+    LiElementClasses = new string[] {"page-item"},
+    PageClasses = new string[] { "page-link" }
+})
+    </div>
     </div>
 </div>

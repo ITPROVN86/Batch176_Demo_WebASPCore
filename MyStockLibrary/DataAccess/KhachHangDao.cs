@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using X.PagedList;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MyStockLibrary.DataAccess
 {
@@ -26,19 +29,49 @@ namespace MyStockLibrary.DataAccess
             }
         }
 
-        public IEnumerable<KhachHang> GetKhachHangList()
+        #region Tìm kiếm, so sánh
+
+        /// <summary>
+        /// Chức năng: Hiển thị tất cả thông tin của khách hàng, kết hợp sắp xếp theo tên
+        /// </summary>
+        /// <param name="sortBy"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public IEnumerable<KhachHang> GetKhachHangList(string sortBy)
         {
-            var khachHangs = new List<KhachHang>();
+            using var context = new MyStockContext();
+            List<KhachHang> model = context.KhachHangs.ToList();
             try
             {
-                using var context = new MyStockContext();
-                khachHangs = context.KhachHangs.ToList();
+                switch (sortBy)
+                {
+                    case "name":
+                        model = model.OrderBy(o => o.TenKhachHang).ToList();
+                        break;
+                    case "namedesc":
+                        model = model.OrderByDescending(o => o.TenKhachHang).ToList();
+                        break;
+                    case "address":
+                        model = model.OrderBy(o => o.DiaChi).ToList();
+                        break;
+                    case "addressdesc":
+                        model = model.OrderByDescending(o => o.DiaChi).ToList();
+                        break;
+                    case "id":
+                        model = model.OrderBy(o => o.MaKhachHang).ToList();
+                        break;
+                    case "iddesc":
+                        model = model.OrderByDescending(o => o.MaKhachHang).ToList();
+                        break;
+                    default:
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return khachHangs;
+            return model;
         }
 
         public KhachHang GetKhachHangByID(int id)
@@ -56,15 +89,40 @@ namespace MyStockLibrary.DataAccess
             return kh;
         }
 
-        public IEnumerable<KhachHang> GetKhachHangBySearchName(string name)
+        public IEnumerable<KhachHang> GetKhachHangBySearchName(string name, string sortBy)
         {
             var context = new MyStockContext();
             /*var khachHangs = new List<KhachHang>();*/
-            IQueryable<KhachHang> model = context.KhachHangs;
+            List<KhachHang> model = context.KhachHangs.ToList();
+
             try
             {
-                if (!String.IsNullOrEmpty(name)) { 
-                    model = model.Where(x => x.TenKhachHang.Contains(name));
+                if (!String.IsNullOrEmpty(name))
+                {
+                    model = model.Where(x => x.TenKhachHang.ToLower().Contains(name)).ToList();
+                    switch (sortBy)
+                    {
+                        case "name":
+                            model = model.OrderBy(o => o.TenKhachHang).ToList();
+                            break;
+                        case "namedesc":
+                            model = model.OrderByDescending(o => o.TenKhachHang).ToList();
+                            break;
+                        case "address":
+                            model = model.OrderBy(o => o.DiaChi).ToList();
+                            break;
+                        case "addressdesc":
+                            model = model.OrderByDescending(o => o.DiaChi).ToList();
+                            break;
+                        case "id":
+                            model = model.OrderBy(o => o.MaKhachHang).ToList();
+                            break;
+                        case "iddesc":
+                            model = model.OrderByDescending(o => o.MaKhachHang).ToList();
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 else
                 {
@@ -77,6 +135,8 @@ namespace MyStockLibrary.DataAccess
             }
             return model;
         }
+        #endregion
+
 
         public void AddNew(KhachHang kh)
         {
@@ -145,5 +205,29 @@ namespace MyStockLibrary.DataAccess
                 throw new Exception(ex.Message);
             }
         }
+
+        public IEnumerable<KhachHang> RemoveKhachHangSelected(IEnumerable<int> DeleteList)
+        {
+            using var context = new MyStockContext();
+            var DeleteCatList = context.KhachHangs.Where(z => DeleteList.Contains(z.MaKhachHang)).ToList();
+            context.KhachHangs.RemoveRange(DeleteCatList);
+            context.SaveChanges();
+            return DeleteCatList;
+        }
+
+
+        /* public IEnumerable<KhachHang> ListAllPaging(string stringQuery, int? page)
+         {
+             var context = new MyStockContext();
+             return context.KhachHangs.ToPagedList(page ?? 1, 5);
+         }
+
+         public List<KhachHang> GetKHList(string stringQuery)
+         {
+             var context = new MyStockContext();
+             var CL = context.KhachHangs.Where(x => x.TenKhachHang.Contains(stringQuery)).ToList();
+
+             return CL;
+         }*/
     }
 }

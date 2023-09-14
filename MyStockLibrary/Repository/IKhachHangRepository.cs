@@ -10,7 +10,7 @@ namespace MyStockLibrary.Repository
     public interface IKhachHangRepository
     {
         IEnumerable<KhachHang> GetKhachHangs(string sortBy);
-        IEnumerable<KhachHang> GetKhachHangByName(string name,string sortBy);
+        IEnumerable<KhachHang> GetKhachHangByName(string name,string CityName,string sortBy);
        /* IEnumerable<KhachHang> ListByKhachHangName(string stringQuery);*/
         KhachHang GetKhachHangByID(int id);
         void InsertKhachHang(KhachHang kh);

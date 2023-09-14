@@ -1,0 +1,95 @@
+﻿@model IEnumerable<MyStockLibrary.DataAccess.NhanVien>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "QL Nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<header class="panel-heading">
+    Quản lý Nhân viên
+</header>
+<div class="panel-body">
+    <p>
+        @Html.ActionLink("Tạo mới","Create","Staff", null, new {@class="btn btn-danger"})
+    </p>
+    <div class="text-align">
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-danger">
+
+                @TempData["Message"]
+            </div>
+        }
+    </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                    @{
+                        var sortBy = Context.Request.Query["sortby"] == "id" ? "iddesc" : "id";
+                    }
+                    <a href="@Url.Action("Index","Staff",new {sortBy=sortBy,SearchString=@Context.Request.Query["SearchString"]})">
+                        Mã nhân viên
+                    </a>
+   
+            </th>
+            <th>
+                Tên nhân viên
+            </th>
+            <th>
+              Giới tính
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th>
+                Điện thoại
+            </th>
+            <th>
+                Ngày sinh
+            </th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+ 
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaNhanVien)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenNhanVien)
+                    </td>
+                    <td>
+                        @(item.GioiTinh?"Nam":"Nữ")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiaChi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DienThoai)
+                    </td>
+                    <td>
+                        @Convert.ToDateTime(item.NgaySinh).ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id=item.MaNhanVien}) |
+                        @Html.ActionLink("Details", "Details", new { id=item.MaNhanVien }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.MaNhanVien })
+                    </td>
+                </tr>
+            }
+     
+    </tbody>
+</table>
+    <div class="form-group">
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,sortby = @Context.Request.Query["sortby"]}),
+        new X.PagedList.Web.Common.PagedListRenderOptions {
+        LiElementClasses = new string[] {"page-item"},
+        PageClasses = new string[] { "page-link" }
+        })
+    </div>
+</div>

@@ -97,7 +97,7 @@
                     </li>
                     <li>
                         <a href="#">
-                            <span class="photo"><img alt="avatar" src="~/Admin/images/avatar-mini.jpg"></span>
+                            <span class="photo"><img alt="avatar" src="@Url.Content("~/Admin/images/avatar-mini.jpg")"></span>
                             <span class="subject">
                                 <span class="from">Jonathan Smith</span>
                                 <span class="time">Just now</span>
@@ -109,7 +109,7 @@
                     </li>
                     <li>
                         <a href="#">
-                            <span class="photo"><img alt="avatar" src="~/Admin/images/avatar-mini-2.jpg"></span>
+                            <span class="photo"><img alt="avatar" src="@Url.Content("~/Admin/images/avatar-mini-2.jpg")"></span>
                             <span class="subject">
                                 <span class="from">Jane Doe</span>
                                 <span class="time">2 min ago</span>
@@ -205,7 +205,7 @@
                     if (userName != null)
                     {
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="~/Admin/images/avatar1_small.jpg">
+                            <img alt="" src="@Url.Content("~/Admin/images/avatar1_small.jpg")">
                             <span class="username">@userName</span>
                             <b class="caret"></b>
                         </a>

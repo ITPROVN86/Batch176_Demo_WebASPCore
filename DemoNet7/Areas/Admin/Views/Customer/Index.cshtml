@@ -26,11 +26,20 @@
         <div class="form-group mb-4">
         @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
         {
-                <div class="row col-lg-6">
+                <div class="row col-lg-4">
                 @Html.TextBox("SearchString", Context.Request.Query["SearchString"],null,new {@class="form-control", @placeholder="Nhập từ khoá cần tìm kiếm"})
             </div>
-
-            <div class="col-lg-6">
+             <div class="col-lg-4">
+        <select id="CityId" name="CityName" class="form-control">
+            <option value="">-- Select City --</option>
+            @foreach (var city in ViewBag.City as List<SelectListItem>)
+            {
+                @*city.Value*@
+                <option value="@city.Text">@city.Text</option>
+            }
+        </select>
+                 </div>
+            <div class="col-lg-2">
                 <input type="submit" class="btn btn-danger" value="Tìm kiếm" />
             </div
             <div style="clear: both"></div>
@@ -97,16 +106,39 @@
                                     @Html.ActionLink("Sửa", "Edit", new {  id=item.MaKhachHang  },new {@class="text-danger"}) |
                                     @Html.ActionLink("Chi tiết", "Details", new { /* id=item.PrimaryKey */ }) |
                                     @Html.ActionLink("Xoá", "Delete", new {id=item.MaKhachHang },new {@class="text-danger"})
+                                    <a href="#" class="delete-link" data-id="@item.MaKhachHang" data-confirm="Bạn có thật sự muốn xoá?" data-toggle="modal" data-target="#confirmModal">Xoá</a>
                                 </td>
                             </tr>
                         }
                     }
                 </tbody>
             </table>
+
         </div>
            <div class="form-group">
 <button type="submit" class="btn btn-danger">Delete Selected Rows</button>
           </div>
+
+          <!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
           }
                   <div class="form-group">
         @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,
@@ -118,3 +150,79 @@ new X.PagedList.Web.Common.PagedListRenderOptions {
     </div>
     </div>
 </div>
+@section Scripts{
+     <script type="text/javascript" src="~/Scripts/jquery-ui.js"></script>
+    <Script>
+        $(document).on("click", ".delete-link", function (e) {
+  e.preventDefault();
+  var id = $(this).data("id");
+  var confirmMessage = $(this).data("confirm");
+
+  $("#confirmMessage").text(confirmMessage);
+  $("#confirmDelete").data("id", id); // Lưu trữ ID để sử dụng trong xử lý xóa
+
+  $("#confirmModal").modal("show");
+});
+$(document).on("click", "#confirmDelete", function (e) {
+    e.preventDefault();
+    var id = $(this).data("id");
+    //if (confirm($(this).data("confirm"))) {
+        $.ajax({
+            url: "/Admin/Customer/DeleteId/" + id,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (res) {
+                if (res.status == true) {
+                    window.location.href = '/Admin/Customer';
+                    //$("#getCodeModal").modal("toggle");
+                }
+            },
+             error: function (errormessage) {
+        alert(errormessage.responseText);
+    }
+        });
+    //}
+});
+
+var common = {
+                init: function () {
+                    common.registerEvent();
+                },
+                registerEvent: function () {
+                    $("#SearchString").autocomplete({
+                        minLength: 0,
+                        source: function (request, response) {
+                            $.ajax({
+                                url: "/Admin/Customer/ListName",
+                                dataType: "json",
+                                data: {
+                                    q: request.term
+                                },
+                                success: function (res) {
+                                    response(res.data);
+                                },
+                                error: function(response){
+                                    alert(response.responseText);
+                                }
+                            });
+                        },
+                        focus: function (event, ui) {
+                            $("#SearchString").val(ui.item.label);
+                            return false;
+                        },
+                        select: function (event, ui) {
+                            $("#SearchString").val(ui.item.label);
+                            return false;
+                        }
+                    })
+                        .autocomplete("instance")._renderItem = function (ul, item) {
+                            return $("<li>")
+                                .append("<a>" + item.label + "</a>")
+                                .appendTo(ul);
+                        };
+                }
+            }
+            common.init();
+    </Script>
+}

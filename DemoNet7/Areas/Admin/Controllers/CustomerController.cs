@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MyStockLibrary.DataAccess;
 using MyStockLibrary.Repository;
+using Newtonsoft.Json;
+using System.Text;
 using X.PagedList;
 
 namespace DemoNet7.Areas.Admin.Controllers
@@ -32,14 +36,29 @@ namespace DemoNet7.Areas.Admin.Controllers
            }*/
 
         [HttpGet]
-        public ActionResult Index(string searchString, int? page, string sortBy)
+        public ActionResult Index(string searchString,string CityName, int? page, string sortBy)
         {
-            var khachHangList = khachHangRepository.GetKhachHangs(sortBy).ToPagedList(page ?? 1, 5);
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                searchString = searchString.ToLower();
-                khachHangList = khachHangRepository.GetKhachHangByName(searchString, sortBy).ToPagedList(page ?? 1, 5);
-            }
+
+            /*            if (!string.IsNullOrEmpty(searchString))
+                        {
+                            //searchString = searchString.ToLower();
+                            khachHangList = khachHangRepository.GetKhachHangByName(searchString.ToLower(), CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+                        }
+                        else
+                        {*/
+            var khachHangList = khachHangRepository.GetKhachHangByName(searchString is null?null: searchString, CityName is null? null: CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+           /* }*/
+
+            //Hiển thị thành phố
+            var citys = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Đà Nẵng" },
+        new SelectListItem { Value = "2", Text = "Huế" },
+        new SelectListItem { Value = "3", Text = "Quảng Bình" }
+    };
+
+            ViewBag.City = citys;
+
             //TempData["searchString"] = searchString;
             return View(khachHangList);
 
@@ -64,14 +83,22 @@ namespace DemoNet7.Areas.Admin.Controllers
         {
             try
             {
-                khachHangRepository.InsertKhachHang(kh);
-                TempData["Message"] = "Tạo mới thành công";
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    khachHangRepository.InsertKhachHang(kh);
+                    TempData["Message"] = "Tạo mới thành công";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Tạo mới khách hàng không thành công");
+                }
             }
             catch
             {
-                return View();
+
             }
+            return View(kh);
         }
 
         // GET: CustomerController/Edit/5
@@ -99,9 +126,33 @@ namespace DemoNet7.Areas.Admin.Controllers
         }
 
         // GET: CustomerController/Delete/5
-        public ActionResult Delete(int id)
+        /* public ActionResult Delete(int id)
+         {
+             return View();
+         }*/
+
+        [HttpPost]
+        public JsonResult DeleteId(int id)
         {
-            return View();
+            try
+            {
+                var record = khachHangRepository.GetKhachHangByID(id);
+                if (record == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy bản ghi" });
+                }
+                khachHangRepository.DeleteKhachHang(id);
+                TempData["Message"] = "Xoá thành công";
+                /*return Json(new { success = true, id = id});*/
+                return Json(new
+                {
+                    status = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         // POST: CustomerController/Delete/5
@@ -135,6 +186,25 @@ namespace DemoNet7.Areas.Admin.Controllers
             khachHangRepository.DeleteSelectedKhachHang(SelectedCatDelete);
             TempData["Message"] = $"Xoá {SelectedCatDelete.Count()} hàng thành công";
             return RedirectToAction("Index");
+        }
+
+
+        public JsonResult ListName(string q)
+        {
+            if (!string.IsNullOrEmpty(q))
+            {
+                var data = khachHangRepository.GetKhachHangByName(q.ToLower(),"", "name");
+                var responseData = data.Select(kh => kh.TenKhachHang).ToList();
+                return Json(new
+                {
+                    data = responseData,
+                    status = true
+                });
+            }
+            return Json(new
+            {
+                status = false
+            });
         }
     }
 }

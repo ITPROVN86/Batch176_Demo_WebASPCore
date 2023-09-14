@@ -10,6 +10,8 @@ namespace DemoNet7.Areas.Admin.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
+
+
         public IActionResult Index()
         {
             ViewData["Title"] = "Đăng nhập";
@@ -18,11 +20,11 @@ namespace DemoNet7.Areas.Admin.Controllers
 
         public IActionResult Login()
         {
-            var user = User as ClaimsPrincipal;
+            /*var user = User as ClaimsPrincipal;
             if (user != null)
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
             ViewData["Title"] = "Đăng nhập";
             return View();
         }

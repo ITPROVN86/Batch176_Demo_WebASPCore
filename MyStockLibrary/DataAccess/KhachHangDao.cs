@@ -89,7 +89,9 @@ namespace MyStockLibrary.DataAccess
             return kh;
         }
 
-        public IEnumerable<KhachHang> GetKhachHangBySearchName(string name, string sortBy)
+
+
+        public IEnumerable<KhachHang> GetKhachHangBySearchName(string name, string CityName, string sortBy)
         {
             var context = new MyStockContext();
             /*var khachHangs = new List<KhachHang>();*/
@@ -97,10 +99,16 @@ namespace MyStockLibrary.DataAccess
 
             try
             {
+                /* if (!String.IsNullOrEmpty(name))
+                 {*/
                 if (!String.IsNullOrEmpty(name))
                 {
                     model = model.Where(x => x.TenKhachHang.ToLower().Contains(name)).ToList();
-                    switch (sortBy)
+                }
+                if (!String.IsNullOrEmpty(CityName)) { 
+                    model = model.Where(x => x.DiaChi.ToLower().Contains(CityName)).ToList();
+                }
+                switch (sortBy)
                     {
                         case "name":
                             model = model.OrderBy(o => o.TenKhachHang).ToList();
@@ -123,11 +131,11 @@ namespace MyStockLibrary.DataAccess
                         default:
                             break;
                     }
-                }
-                else
+                /*}*/
+                /*else
                 {
                     return model;
-                }
+                }*/
             }
             catch (Exception ex)
             {

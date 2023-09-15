@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<MyStockLibrary.DataAccess.KhachHang>
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
 @{
     ViewData["Title"] = "QL Khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -14,11 +15,11 @@
         @Html.ActionLink("Tạo mới","Create","Customer", null, new {@class="btn btn-danger"})
     </p>
     <div class="text-align">
-        @if (TempData["Message"] != null)
+        @if (TempData["AlertMessage"] != null)
         {
-            <div class="alert alert-danger">
+            <div id="AlertBox" class="alert @TempData["AlertType"]">
 
-                @TempData["Message"]
+                @TempData["AlertMessage"]
             </div>
         }
     </div>
@@ -32,10 +33,13 @@
              <div class="col-lg-4">
         <select id="CityId" name="CityName" class="form-control">
             <option value="">-- Select City --</option>
+            @{
+                if(ViewBag.City!=null){
             @foreach (var city in ViewBag.City as List<SelectListItem>)
             {
-                @*city.Value*@
-                <option value="@city.Text">@city.Text</option>
+                <option value="@city.Text" @(city.Text == Context.Request.Query["CityName"] ? "selected" : "")>@city.Text</option>
+            }
+            }
             }
         </select>
                  </div>
@@ -141,6 +145,31 @@
 </div>
           }
                   <div class="form-group">
+                     @* @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))*@
+                 @*     @Html.PagedListPager((IPagedList)Model,
+    page => Url.Action("Index",
+        new { page }),
+    new PagedListRenderOptions()
+    {
+        DisplayItemSliceAndTotal = true,
+    })*@
+@*                    @Html.PagedListPager((IPagedList)Model,
+    page => Url.Action("Index",
+        new { page }),
+        new PagedListRenderOptions()
+        {
+            DisplayItemSliceAndTotal = true,
+            ItemSliceAndTotalPosition = ItemSliceAndTotalPosition.End
+        })*@
+@* @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Customer",new { SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.Query["sortby"], page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing( new AjaxOptions()
+        {
+        HttpMethod = "POST",
+        UpdateTargetId = "targetElement",
+        OnSuccess = "onAjaxSuccess",
+        OnFailure = "onAjaxFailure"
+        }))*@
+
         @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,
 SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.Query["sortby"]}),
 new X.PagedList.Web.Common.PagedListRenderOptions {
@@ -151,78 +180,8 @@ new X.PagedList.Web.Common.PagedListRenderOptions {
     </div>
 </div>
 @section Scripts{
+
      <script type="text/javascript" src="~/Scripts/jquery-ui.js"></script>
-    <Script>
-        $(document).on("click", ".delete-link", function (e) {
-  e.preventDefault();
-  var id = $(this).data("id");
-  var confirmMessage = $(this).data("confirm");
-
-  $("#confirmMessage").text(confirmMessage);
-  $("#confirmDelete").data("id", id); // Lưu trữ ID để sử dụng trong xử lý xóa
-
-  $("#confirmModal").modal("show");
-});
-$(document).on("click", "#confirmDelete", function (e) {
-    e.preventDefault();
-    var id = $(this).data("id");
-    //if (confirm($(this).data("confirm"))) {
-        $.ajax({
-            url: "/Admin/Customer/DeleteId/" + id,
-            dataType: "json",
-            type: "POST",
-            contentType: "application/json;charset=UTF-8",
-            success: function (res) {
-                if (res.status == true) {
-                    window.location.href = '/Admin/Customer';
-                    //$("#getCodeModal").modal("toggle");
-                }
-            },
-             error: function (errormessage) {
-        alert(errormessage.responseText);
-    }
-        });
-    //}
-});
-
-var common = {
-                init: function () {
-                    common.registerEvent();
-                },
-                registerEvent: function () {
-                    $("#SearchString").autocomplete({
-                        minLength: 0,
-                        source: function (request, response) {
-                            $.ajax({
-                                url: "/Admin/Customer/ListName",
-                                dataType: "json",
-                                data: {
-                                    q: request.term
-                                },
-                                success: function (res) {
-                                    response(res.data);
-                                },
-                                error: function(response){
-                                    alert(response.responseText);
-                                }
-                            });
-                        },
-                        focus: function (event, ui) {
-                            $("#SearchString").val(ui.item.label);
-                            return false;
-                        },
-                        select: function (event, ui) {
-                            $("#SearchString").val(ui.item.label);
-                            return false;
-                        }
-                    })
-                        .autocomplete("instance")._renderItem = function (ul, item) {
-                            return $("<li>")
-                                .append("<a>" + item.label + "</a>")
-                                .appendTo(ul);
-                        };
-                }
-            }
-            common.init();
-    </Script>
+     <script src="~/admin/js/controller/customercontroller.js"></script>
+   
 }

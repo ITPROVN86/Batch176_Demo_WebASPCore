@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<MyStockLibrary.DataAccess.NhanVien>
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
 @{
     ViewData["Title"] = "QL Nhân viên";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -22,38 +23,38 @@
             </div>
         }
     </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
                     @{
                         var sortBy = Context.Request.Query["sortby"] == "id" ? "iddesc" : "id";
                     }
                     <a href="@Url.Action("Index","Staff",new {sortBy=sortBy,SearchString=@Context.Request.Query["SearchString"]})">
                         Mã nhân viên
                     </a>
-   
-            </th>
-            <th>
-                Tên nhân viên
-            </th>
-            <th>
-              Giới tính
-            </th>
-            <th>
-                Địa chỉ
-            </th>
-            <th>
-                Điện thoại
-            </th>
-            <th>
-                Ngày sinh
-            </th>
-            <th>Chức năng</th>
-        </tr>
-    </thead>
-    <tbody>
- 
+
+                </th>
+                <th>
+                    Tên nhân viên
+                </th>
+                <th>
+                    Giới tính
+                </th>
+                <th>
+                    Địa chỉ
+                </th>
+                <th>
+                    Điện thoại
+                </th>
+                <th>
+                    Ngày sinh
+                </th>
+                <th>Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+
             @foreach (var item in Model)
             {
                 <tr>
@@ -64,7 +65,8 @@
                         @Html.DisplayFor(modelItem => item.TenNhanVien)
                     </td>
                     <td>
-                        @(item.GioiTinh?"Nam":"Nữ")
+                        @(item.GioiTinh ? "Nam" : "Nữ") - 
+                        <a href="#" class="btn @(item.GioiTinh ? "btn-warning":"btn-primary") btn-active" data-id="@item.MaNhanVien">@(item.GioiTinh ? "Nam" : "Nữ")</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DiaChi)
@@ -82,14 +84,28 @@
                     </td>
                 </tr>
             }
-     
-    </tbody>
-</table>
+
+        </tbody>
+    </table>
     <div class="form-group">
-        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,sortby = @Context.Request.Query["sortby"]}),
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Staff",new { ViewBag.SearchName, page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing( new AjaxOptions()
+        {
+        HttpMethod = "POST",
+        UpdateTargetId = "targetElement",
+        OnSuccess = "onAjaxSuccess",
+        OnFailure = "onAjaxFailure"
+        }))
+       @* @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,sortby = @Context.Request.Query["sortby"]}),
         new X.PagedList.Web.Common.PagedListRenderOptions {
         LiElementClasses = new string[] {"page-item"},
         PageClasses = new string[] { "page-link" }
-        })
+        })*@
     </div>
 </div>
+@section Scripts{
+    @{
+        DateTime currentDate = DateTime.Now;
+    }
+    <script src="~/admin/js/controller/staffController.js?@currentDate"></script>
+}

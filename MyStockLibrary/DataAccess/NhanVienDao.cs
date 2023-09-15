@@ -154,5 +154,15 @@ namespace MyStockLibrary.DataAccess
             context.SaveChanges();
             return DeleteCatList;
         }
+
+        public bool ChangeStatus(int id)
+        {
+            using var context = new MyStockContext();
+            var nv = context.NhanViens.Find(id);
+            nv.GioiTinh = !nv.GioiTinh;
+            //context.NhanViens.Update(nv);
+            context.SaveChanges();
+            return nv.GioiTinh;
+        }
     }
 }

@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyStockLibrary.DataAccess;
 using MyStockLibrary.Repository;
 using Newtonsoft.Json;
+using System.Globalization;
 using System.Text;
 using X.PagedList;
 
 namespace DemoNet7.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CustomerController : Controller
+    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    public class CustomerController : BaseController
     {
         IKhachHangRepository khachHangRepository = null;
         public CustomerController() => khachHangRepository = new KhachHangRepository();
@@ -35,18 +40,33 @@ namespace DemoNet7.Areas.Admin.Controllers
 
            }*/
 
+        /*        public JsonResult GetCitys()
+                {
+                    var citys = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "Đà Nẵng" },
+                new SelectListItem { Value = "2", Text = "Huế" },
+                new SelectListItem { Value = "3", Text = "Quảng Bình" }
+            };
+                    var result = new
+                    {
+                        City = citys,
+                        AdditionalInfo = "Test"
+                    };
+                    ViewBag.City = citys;
+                    return Json(result);
+                }*/
+
+        public IActionResult GetCityById(string searchString, string CityName, int? page, string sortBy)
+        {
+            var khachHangList = khachHangRepository.GetKhachHangByName(searchString is null ? null : searchString, CityName is null ? null : CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+            return Ok(khachHangList);
+        }
+
         [HttpGet]
         public ActionResult Index(string searchString,string CityName, int? page, string sortBy)
         {
-
-            /*            if (!string.IsNullOrEmpty(searchString))
-                        {
-                            //searchString = searchString.ToLower();
-                            khachHangList = khachHangRepository.GetKhachHangByName(searchString.ToLower(), CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
-                        }
-                        else
-                        {*/
-            var khachHangList = khachHangRepository.GetKhachHangByName(searchString is null?null: searchString, CityName is null? null: CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+            var khachHangList = khachHangRepository.GetKhachHangByName(searchString is null?null: searchString.ToLower(), CityName is null? null: CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
            /* }*/
 
             //Hiển thị thành phố
@@ -86,7 +106,7 @@ namespace DemoNet7.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     khachHangRepository.InsertKhachHang(kh);
-                    TempData["Message"] = "Tạo mới thành công";
+                    SetAlert("Tạo mới thành công", "error");
                     return RedirectToAction("Index");
                 }
                 else
@@ -116,7 +136,7 @@ namespace DemoNet7.Areas.Admin.Controllers
             try
             {
                 khachHangRepository.UpdateKhachHang(kh);
-                TempData["Message"] = "Cập nhật thành công";
+                SetAlert("Cập nhật thành công", "error");
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -142,7 +162,7 @@ namespace DemoNet7.Areas.Admin.Controllers
                     return Json(new { success = false, message = "Không tìm thấy bản ghi" });
                 }
                 khachHangRepository.DeleteKhachHang(id);
-                TempData["Message"] = "Xoá thành công";
+                SetAlert("Xoá thành công", "error");
                 /*return Json(new { success = true, id = id});*/
                 return Json(new
                 {
@@ -163,7 +183,7 @@ namespace DemoNet7.Areas.Admin.Controllers
             try
             {
                 khachHangRepository.DeleteKhachHang(id);
-                TempData["Message"] = "Xoá thành công";
+                SetAlert("Xoá thành công", "error");
                 return RedirectToAction(nameof(Index));
             }
             catch

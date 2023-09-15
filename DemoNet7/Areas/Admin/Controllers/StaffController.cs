@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyStockLibrary.DataAccess;
@@ -9,6 +10,8 @@ using X.PagedList;
 namespace DemoNet7.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class StaffController : Controller
     {
         INhanVienRepository nhanVienRepository = null;
@@ -19,6 +22,7 @@ namespace DemoNet7.Areas.Admin.Controllers
             var nhanVienList = nhanVienRepository.GetNhanViens(sortBy).ToPagedList(page ?? 1, 5);
             return View(nhanVienList);
         }
+
 
         // GET: StaffController/Details/5
         public ActionResult Details(int id)
@@ -101,6 +105,16 @@ namespace DemoNet7.Areas.Admin.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        public JsonResult ChangeStatus(int id)
+        {
+            var result = new NhanVienDao().ChangeStatus(id);
+            return Json(new
+            {
+                status = result
+            });
         }
     }
 }

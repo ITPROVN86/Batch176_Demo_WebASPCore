@@ -67,10 +67,12 @@ namespace DemoNet7.Areas.Admin.Controllers
                 var routeValues = new RouteValueDictionary
                 {
                     {"area","Admin" },
-                    {"claimType","AdminClaim" },
+                    {"returnURL",Request.Query["ReturnUrl"] },
                     {"claimValue","true" }
                 };
+
                 return RedirectToAction("Index", "Home", routeValues);// RedirectToAction("Index", "Home");
+               
             }
             ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng.");
             return View(model);

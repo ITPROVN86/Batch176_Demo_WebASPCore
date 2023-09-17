@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyStockLibrary.DataAccess.NguoiDung>
+﻿@model IEnumerable<MyStockLibrary.DataAccess.NguoiDungViewModel>
 @using DemoNet7.Areas.Admin.Models;
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
@@ -15,14 +15,42 @@
         @Html.ActionLink("Tạo mới","Create","User", null, new {@class="btn btn-danger"})
     </p>
     <div class="text-align">
-        @if (TempData["Message"] != null)
+        @if (TempData["AlertMessage"] != null)
         {
-            <div class="alert alert-danger">
+            <div id="AlertBox" class="alert @TempData["AlertType"]">
 
-                @TempData["Message"]
+                @TempData["AlertMessage"]
             </div>
         }
     </div>
+    <div class="processing-preview hidden">
+                </div>
+     <div class="row form-body">
+        <div class="form-group mb-4">
+        @using (Html.BeginForm("Index", "User", FormMethod.Get))
+        {
+                <div class="row col-lg-4">
+                @Html.TextBox("SearchString", Context.Request.Query["SearchString"],null,new {@class="form-control", @placeholder="Nhập từ khoá cần tìm kiếm"})
+            </div>
+             <div class="col-lg-4">
+        <select id="UserTypeId" name="UserType" class="form-control">
+            <option value="">-- Select User Type --</option>
+            @{
+                if(ViewBag.LoaiNguoiDung!=null){
+            @foreach (var userType in ViewBag.LoaiNguoiDung as List<LoaiNguoiDung>)
+            {
+                <option value="@userType.Id" @(userType.Id == Convert.ToInt32(Context.Request.Query["UserType"]) ? "selected" : "")>@userType.Name</option>
+            }
+            }
+            }
+        </select>
+                 </div>
+            <div class="col-lg-2">
+                <input type="submit" onclick="return DisplayProgressMessage(this, 'Saving...');"  class="btn btn-danger" value="Tìm kiếm" />
+            </div
+            <div style="clear: both"></div>
+        }
+        </div>
     <table class="table">
         <thead>
             <tr>
@@ -36,10 +64,11 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MaNguoiDung)
                 </th>
+                <th>Họ tên</th>
                 <th>
                    Giới tính
                 </th>
-                <th></th>
+                <th>Chức năng</th>
             </tr>
         </thead>
         <tbody>
@@ -79,8 +108,11 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.MaNguoiDung)
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenNguoiDung)
+                    </td>
                     <td>@{
-                            var gender = item.Status;
+                            var gender = item.GioiTinh;
                             var icon = "";
                             if (gender)
                             {
@@ -107,10 +139,35 @@
         </tbody>
     </table>
     <div class="form-group">
-        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,sortby = @Context.Request.Query["sortby"]}),
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page = page,
+SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.Query["sortby"]}),
         new X.PagedList.Web.Common.PagedListRenderOptions {
         LiElementClasses = new string[] {"page-item"},
         PageClasses = new string[] { "page-link" }
         })
     </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+       
+    }
+<script src="~/admin/js/controller/usercontroller.js"></script>
+    <script type="text/javascript">
+        function DisplayProgressMessage(ctl, msg) {
+            //if use the submit button, you can use event.preventDefault to prevent the default submit form behavior.
+            event.preventDefault();
+            // Turn off the "Save" button and change text
+            $(ctl).prop("disabled", true).val(msg);
+            // Gray out background on page
+            $("body").addClass("submit-progress-bg");
+            // Wrap in setTimeout so the UI can update the spinners
+            $(".processing-preview").removeClass("hidden");
+            //submit the form.
+            setTimeout(function () {
+                $("form").submit();
+            }, 1);
+            return true;
+        }
+    </script>
+    }

@@ -14,5 +14,6 @@ namespace MyStockLibrary.DataAccess
         public int LoaiNguoiDung { get; set; }
         public int? MaNguoiDung { get; set; }
         public bool Status { get; set; }
+
     }
 }

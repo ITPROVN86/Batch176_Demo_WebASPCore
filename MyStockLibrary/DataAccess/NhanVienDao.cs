@@ -26,6 +26,54 @@ namespace MyStockLibrary.DataAccess
             }
         }
 
+        public IEnumerable<NhanVien> GetNhanVienBySearchName(string name, string CityName, string sortBy)
+        {
+            var context = new MyStockContext();
+            List<NhanVien> model = context.NhanViens.ToList();
+
+            try
+            {
+                /* if (!String.IsNullOrEmpty(name))
+                 {*/
+                if (!String.IsNullOrEmpty(name))
+                {
+                    model = model.Where(x => x.TenNhanVien.ToLower().Contains(name)).ToList();
+                }
+                if (!String.IsNullOrEmpty(CityName))
+                {
+                    model = model.Where(x => x.DiaChi.ToLower().Contains(CityName)).ToList();
+                }
+                switch (sortBy)
+                {
+                    case "name":
+                        model = model.OrderBy(o => o.TenNhanVien).ToList();
+                        break;
+                    case "namedesc":
+                        model = model.OrderByDescending(o => o.TenNhanVien).ToList();
+                        break;
+                    case "address":
+                        model = model.OrderBy(o => o.DiaChi).ToList();
+                        break;
+                    case "addressdesc":
+                        model = model.OrderByDescending(o => o.DiaChi).ToList();
+                        break;
+                    case "id":
+                        model = model.OrderBy(o => o.MaNhanVien).ToList();
+                        break;
+                    case "iddesc":
+                        model = model.OrderByDescending(o => o.MaNhanVien).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return model;
+        }
+
         public IEnumerable<NhanVien> GetNhanVienList(string sortBy)
         {
             using var context = new MyStockContext();

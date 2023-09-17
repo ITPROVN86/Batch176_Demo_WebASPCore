@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStockLibrary.DataAccess;
 using MyStockLibrary.Repository;
 using System.Globalization;
@@ -12,14 +13,29 @@ namespace DemoNet7.Areas.Admin.Controllers
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     [Authorize(AuthenticationSchemes = "Admin")]
-    public class StaffController : Controller
+    public class StaffController : BaseController
     {
         INhanVienRepository nhanVienRepository = null;
         public StaffController() => nhanVienRepository = new NhanVienRepository();
-        // GET: StaffController
-        public ActionResult Index(int? page, string sortBy)
+
+        public IActionResult GetCityById(string searchString, string CityName, int? page, string sortBy)
         {
-            var nhanVienList = nhanVienRepository.GetNhanViens(sortBy).ToPagedList(page ?? 1, 5);
+            var khachHangList = nhanVienRepository.GetNhanVienByName(searchString is null ? null : searchString, CityName is null ? null : CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+            return Ok(khachHangList);
+        }
+        // GET: StaffController
+        public ActionResult Index(string searchString, string CityName, int? page, string sortBy)
+        {
+            var nhanVienList = nhanVienRepository.GetNhanVienByName(searchString is null ? null : searchString.ToLower(), CityName is null ? null : CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
+            //Hiển thị thành phố
+            var citys = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Đà Nẵng" },
+        new SelectListItem { Value = "2", Text = "Huế" },
+        new SelectListItem { Value = "3", Text = "Quảng Bình" }
+    };
+
+            ViewBag.City = citys;
             return View(nhanVienList);
         }
 
@@ -47,7 +63,7 @@ namespace DemoNet7.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     nhanVienRepository.InsertNhanVien(nv);
-                    TempData["Message"] = "Tạo mới thành công";
+                    SetAlert("Tạo mới thành công", "error");
                     return RedirectToAction("Index");
                 }
                 else
@@ -77,7 +93,7 @@ namespace DemoNet7.Areas.Admin.Controllers
             try
             {
                 nhanVienRepository.UpdateNhanVien(nv);
-                TempData["Message"] = "Cập nhật thành công";
+                SetAlert("Cập nhật thành công", "error");
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -114,6 +130,24 @@ namespace DemoNet7.Areas.Admin.Controllers
             return Json(new
             {
                 status = result
+            });
+        }
+
+        public JsonResult ListName(string q)
+        {
+            if (!string.IsNullOrEmpty(q))
+            {
+                var data = nhanVienRepository.GetNhanVienByName(q.ToLower(), "", "name");
+                var responseData = data.Select(kh => kh.TenNhanVien).ToList();
+                return Json(new
+                {
+                    data = responseData,
+                    status = true
+                });
+            }
+            return Json(new
+            {
+                status = false
             });
         }
     }

@@ -20,43 +20,7 @@ namespace DemoNet7.Areas.Admin.Controllers
     {
         IKhachHangRepository khachHangRepository = null;
         public CustomerController() => khachHangRepository = new KhachHangRepository();
-        // GET: CustomerController
-
-        /* public ActionResult Index()
-         {
-             var khachHangList = khachHangRepository.GetKhachHangs();
-             return View(khachHangList);
-         }*/
-
-        /*   [HttpGet]
-           public ActionResult Index(string searchString)
-           {
-               if (!string.IsNullOrEmpty(searchString))
-               {
-                   searchString = searchString.ToLower();
-               }
-               var khachHangList = khachHangRepository.GetKhachHangByName(searchString);
-               return View(khachHangList);
-
-           }*/
-
-        /*        public JsonResult GetCitys()
-                {
-                    var citys = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "Đà Nẵng" },
-                new SelectListItem { Value = "2", Text = "Huế" },
-                new SelectListItem { Value = "3", Text = "Quảng Bình" }
-            };
-                    var result = new
-                    {
-                        City = citys,
-                        AdditionalInfo = "Test"
-                    };
-                    ViewBag.City = citys;
-                    return Json(result);
-                }*/
-
+     
         public IActionResult GetCityById(string searchString, string CityName, int? page, string sortBy)
         {
             var khachHangList = khachHangRepository.GetKhachHangByName(searchString is null ? null : searchString, CityName is null ? null : CityName.ToLower(), sortBy).ToPagedList(page ?? 1, 5);

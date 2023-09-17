@@ -10,7 +10,7 @@ namespace MyStockLibrary.Repository
     public interface INhanVienRepository
     {
         IEnumerable<NhanVien> GetNhanViens(string sortBy);
-
+        public IEnumerable<NhanVien> GetNhanVienByName(string name, string CityName, string sortBy) => NhanVienDao.Instance.GetNhanVienBySearchName(name, CityName, sortBy);
         NhanVien GetNhanVienByID(int id);
         void InsertNhanVien(NhanVien nv);
         void UpdateNhanVien(NhanVien nv);

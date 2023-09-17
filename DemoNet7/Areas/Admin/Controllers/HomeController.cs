@@ -10,6 +10,10 @@ namespace DemoNet7.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
+            if (!string.IsNullOrEmpty(Request.Query["ReturnUrl"]))
+            {
+                return Redirect("" + Request.Query["ReturnUrl"]);
+            }
             return View();
         }
     }

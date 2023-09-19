@@ -40,6 +40,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapAreaControllerRoute(
     name: "admin",
     areaName: "Admin",

@@ -10,8 +10,6 @@ namespace DemoNet7.Areas.Admin.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-
-
         public IActionResult Index()
         {
             ViewData["Title"] = "Đăng nhập";
@@ -80,7 +78,6 @@ namespace DemoNet7.Areas.Admin.Controllers
 
         public async Task<IActionResult> Logout()
         {
-
             // Đăng xuất người dùng
             await HttpContext.SignOutAsync("Admin");
 

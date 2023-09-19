@@ -39,14 +39,15 @@
                 if(ViewBag.LoaiNguoiDung!=null){
             @foreach (var userType in ViewBag.LoaiNguoiDung as List<LoaiNguoiDung>)
             {
-                <option value="@userType.Id" @(userType.Id == Convert.ToInt32(Context.Request.Query["UserType"]) ? "selected" : "")>@userType.Name</option>
-            }
+                                    <option value="@userType.Id" @((Context.Request.Query["UserType"] != "")? (userType.Id == Convert.ToInt32(Context.Request.Query["UserType"]) ? "selected" : ""):""
+                                           )>@userType.Name</option>
+                                }
             }
             }
         </select>
                  </div>
             <div class="col-lg-2">
-                <input type="submit" onclick="return DisplayProgressMessage(this, 'Saving...');"  class="btn btn-danger" value="Tìm kiếm" />
+                <input type="submit" onclick="return DisplayProgressMessage(this, 'Searching...');"  class="btn btn-danger" value="Tìm kiếm" />
             </div
             <div style="clear: both"></div>
         }
@@ -150,9 +151,9 @@ SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-       
+        DateTime currentDate = DateTime.Now;
     }
-<script src="~/admin/js/controller/usercontroller.js"></script>
+<script src="~/admin/js/controller/usercontroller.js?@currentDate"></script>
     <script type="text/javascript">
         function DisplayProgressMessage(ctl, msg) {
             //if use the submit button, you can use event.preventDefault to prevent the default submit form behavior.
@@ -166,7 +167,7 @@ SearchString = @Context.Request.Query["SearchString"],sortby = @Context.Request.
             //submit the form.
             setTimeout(function () {
                 $("form").submit();
-            }, 1);
+            }, 5000);
             return true;
         }
     </script>

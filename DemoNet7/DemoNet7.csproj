@@ -6,8 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\upload\**" />
+    <Content Remove="Areas\Admin\upload\**" />
+    <EmbeddedResource Remove="Areas\Admin\upload\**" />
+    <None Remove="Areas\Admin\upload\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="jQuery.Ajax.Unobtrusive" Version="2.0.20710" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
@@ -31,6 +39,7 @@
     <Folder Include="wwwroot\lib\jquery-validation\dist\" />
     <Folder Include="wwwroot\lib\jquery\" />
     <Folder Include="wwwroot\lib\jquery\dist\" />
+    <Folder Include="wwwroot\upload\images\" />
   </ItemGroup>
 
   <ItemGroup>

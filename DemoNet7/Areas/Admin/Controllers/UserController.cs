@@ -1,4 +1,5 @@
 ﻿using DemoNet7.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +9,8 @@ using X.PagedList;
 namespace DemoNet7.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class UserController : BaseController
     {
         INguoiDungRepository nguoiDungRepository = null;

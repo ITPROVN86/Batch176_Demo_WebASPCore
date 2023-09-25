@@ -30,7 +30,7 @@ namespace DemoNet7.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Index(string searchString, int? page, string sortBy)
         {
-           /* MailUtils.SendMailGoogleSmtp("admincnttvn@gmail.com","quangltn3@fe.edu.vn","Xin chào","Nội dung nè","admincnttvn@gmail.com", "nbdehtuysphuogug");*/
+           /* MailUtils.SendMailGoogleSmtp("admincnttvn@gmail.com", "quangltn3@fe.edu.vn", "Xin chào", "Nội dung nè", "admincnttvn@gmail.com", "nbdehtuysphuogug");*/
             var productList = productRepository.GetProductByName(searchString is null ? null : searchString.ToLower(), sortBy).ToPagedList(page ?? 1, 5);
 
             return View(productList);

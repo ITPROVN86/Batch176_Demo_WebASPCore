@@ -8,7 +8,7 @@ namespace DemoNet7.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [AllowAnonymous]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         public IActionResult Index()
         {
@@ -61,6 +61,7 @@ namespace DemoNet7.Areas.Admin.Controllers
                 {
                     IsPersistent = model.RememberLogin
                 });
+                SetAlert("Đăng nhập thành công", "success");
                 TempData["Message"] = "Đăng nhập thành công";
                 var routeValues = new RouteValueDictionary
                 {
